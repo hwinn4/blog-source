@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Blog Title</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <link href="/stylesheets/highlighting.css" rel="stylesheet" />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Overpass+Mono|Questrial" rel="stylesheet">
+  </head>
+  <body>
+    <div id="main" role="main">
+      <div id="left-gutter">
+        <p></p>
+      </div>
+      <div id="left">
+        <div id="name">
+          <div>HILARY</div>
+          <div>S.WINN</div>
+        </div>
+        <div>
+          <ul id="nav">
+            <li><a href="/2017/04/29/about-me.html">ABOUT</a></li>
+            <li><a href="/">BLOG</a></li>
+            <li><a href="https://github.com/hwinn4" target="_blank">GITHUB</a></li>
+            <li><a href="https://linkedin.com/in/hwinn4" target="_blank">LINKED IN</a></li>
+            <li><a href="https://www.instagram.com/hwinn4/" target="_blank">INSTA</a></li>
+          </ul>
+        </div>
+        <div id="tags">
+          <h6>Tags</h6>
+          <ol>
+              <li><a href="/tags/ruby.html">ruby (1)</a></li>
+              <li><a href="/tags/methods.html">methods (1)</a></li>
+              <li><a href="/tags/enum.html">enum (1)</a></li>
+              <li><a href="/tags/range.html">range (1)</a></li>
+              <li><a href="/tags/rails.html">rails (1)</a></li>
+          </ol>
+        </div>
+        <div id="about-me-pic">
+          <img src="/images/me3.JPG" alt="Me3" />
+        </div>
+        <div id="about-me">
+          <h6>I'm Hilary, a full-stack web developer. I enjoy writing Ruby, JavaScript, and Python. In my first career, I taught high school English and Software Engineering. I love to cook and read. I don't like to bake.</h6>
+
+          <h6>I am currently a software engineer at <a href="https://fuigo.com" target="_blank">Fuigo</a>. All opinions are my own.</h6>
+        </div>
+      </div>
+      <div id="right">
+        <div id="articles">
+          
+  <h2><a href="/2017/04/29/ruby-methods-i-learned-this-week.html">Using .cover? with Active::Record enum</a> <span>Apr 29</span></h2>
+  <!-- use article.summary(250) if you have Nokogiri available to show just
+       the first 250 characters -->
+  <div class="article-body">
+    <p>This week while doing code review for a colleague, I learned about a new-to-me Ruby method, <code>.cover?</code>.</p>
+
+<p><code>.cover?</code> is used to check if an object is within a specified range. This method can be used on a range of strings and numbers. It can also be used on a range created from an <code>ActiveRecord::Enum</code> object, which is how my colleague used it.</p>
+
+<p>Let&rsquo;s say you have an enum inside of a Donor class&hellip;</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Donor</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+    <span class="n">enum</span> <span class="ss">level: </span><span class="p">[</span>
+        <span class="ss">:supporter</span><span class="p">,</span>
+        <span class="ss">:silver</span><span class="p">,</span>
+        <span class="ss">:elite</span><span class="p">,</span>
+        <span class="ss">:gold</span>
+    <span class="p">]</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>&hellip;and you want to check if any given donor is eligible for a benefit only available to donors who have reached silver level or higher. Create a range from your enum and check if the donor&rsquo;s level falls within that range:</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="n">employee1</span> <span class="o">=</span> <span class="no">Donor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">level: </span><span class="no">Donor</span><span class="p">.</span><span class="nf">levels</span><span class="p">[</span><span class="ss">:gold</span><span class="p">])</span>
+<span class="n">employee2</span> <span class="o">=</span> <span class="no">Donor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">level: </span><span class="no">Donor</span><span class="p">.</span><span class="nf">levels</span><span class="p">[</span><span class="ss">:supporter</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">is_eligible_for_benefit?</span><span class="p">(</span><span class="n">donor</span><span class="p">)</span>
+    <span class="n">giving_range</span> <span class="o">=</span> <span class="p">(</span><span class="no">Donor</span><span class="p">.</span><span class="nf">levels</span><span class="p">[</span><span class="ss">:silver</span><span class="p">].</span><span class="nf">.</span><span class="no">Donor</span><span class="p">.</span><span class="nf">levels</span><span class="p">[</span><span class="ss">:gold</span><span class="p">])</span>
+
+    <span class="n">giving_range</span><span class="p">.</span><span class="nf">cover?</span><span class="p">(</span><span class="n">donor</span><span class="p">.</span><span class="nf">level</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">is_eligible_for_benefit?</span><span class="p">(</span><span class="n">employee1</span><span class="p">)</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">is_eligible_for_benefit?</span><span class="p">(</span><span class="n">employee2</span><span class="p">)</span>
+<span class="c1"># =&gt; false</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>If you want to exclude the upper limit, use <code>(...)</code> instead of <code>(..)</code> to define your range.</p>
+
+  </div>
+
+
+        </div>
+      </div>
+      <div id="right-gutter">
+        <p></p>
+      </div>
+    </div>
+  </body>
+</html>
