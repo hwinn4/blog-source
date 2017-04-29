@@ -1,8 +1,0 @@
----
-title: About Me
-date: 2017-04-29 02:43 UTC
-tags: 
----
-I'm Hilary, a full-stack web developer. I enjoy writing Ruby, JavaScript, and Python. In my first career, I taught high school English and Software Engineering. I love to cook and read. I don't like to bake.
-
-I am currently a software engineer at <a href="https://fuigo.com" target="_blank">Fuigo</a>. All opinions are my own.
