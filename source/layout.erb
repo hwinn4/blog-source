@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Blog Title<%= ' - ' + current_article.title unless current_article.nil? %></title>
+    <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
+    <%= stylesheet_link_tag "application" %>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Overpass+Mono|Questrial" rel="stylesheet">
+  </head>
+  <body>
+    <div id="main" role="main">
+      <div id="left-gutter">
+        <p></p>
+      </div>
+      <div id="left">
+        <div id="name">
+          <div>HILARY</div>
+          <div>S.WINN</div>
+        </div>
+        <div id="tags">
+          <h6>Tags</h6>
+          <ol>
+            <% blog.tags.each do |tag, articles| %>
+              <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
+            <% end %>
+          </ol>
+        </div>
+      </div>
+      <div id="right">
+        <div>
+          <ul id="nav">
+            <li><%= link_to 'ABOUT', '/2017/04/29/about-me.html', :relative => true %></li>
+            <li><%= link_to 'BLOG', '/' %></li>
+            <li><%= link_to 'GITHUB', 'https://github.com/hwinn4', :target => "_blank" %></li>
+            <li><%= link_to 'LINKED IN', 'https://linkedin.com/in/hwinn4', :target => "_blank" %></li>
+            <li><%= link_to 'INSTA', 'https://www.instagram.com/hwinn4/', :target => "_blank" %></li>
+          </ul>
+        </div>
+        <div id="articles">
+          <%= yield %>
+        </div>
+      </div>
+      <div id="right-gutter">
+        <p></p>
+      </div>
+    </div>
+  </body>
+</html>
